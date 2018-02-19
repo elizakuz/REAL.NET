@@ -120,6 +120,8 @@
     <Compile Include="Controls\Scene\Scene.xaml.cs">
       <DependentUpon>Scene.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Scene\StaticVertexConnectionPointForGH.cs" />
+    <Compile Include="Controls\Scene\VertexControlForGH.cs" />
     <Compile Include="Controls\Toolbar\ToolbarView.xaml.cs">
       <DependentUpon>ToolbarView.xaml</DependentUpon>
     </Compile>
@@ -339,6 +341,16 @@
     <Analyzer Include="..\..\packages\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="View\Pictures\Greenhouse\airTemperature.png" />
+    <Resource Include="View\Pictures\Greenhouse\andOperation.png" />
+    <Resource Include="View\Pictures\Greenhouse\closeWindow.png" />
+    <Resource Include="View\Pictures\Greenhouse\interval.png" />
+    <Resource Include="View\Pictures\Greenhouse\openWindow.png" />
+    <Resource Include="View\Pictures\Greenhouse\orOperation.png" />
+    <Resource Include="View\Pictures\Greenhouse\pourSoil.png" />
+    <Resource Include="View\Pictures\Greenhouse\soilTemperature.png" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v4.5.2'">

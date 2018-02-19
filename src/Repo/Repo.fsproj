@@ -86,6 +86,8 @@
     <Compile Include="ModelBuilders\RobotsMetamodelBuilder.fs" />
     <Compile Include="ModelBuilders\RobotsTestModelBuilder.fs" />
     <Compile Include="ModelBuilders\CoreMetametamodelBuilder.fs" />
+    <Compile Include="ModelBuilders\GreenhouseTestModelBuilder.fs" />
+    <Compile Include="ModelBuilders\GreenhouseMetamodelBuilder.fs" />
     <Compile Include="FacadeLayer.fs" />
     <Compile Include="FacadeLayer\Attribute.fs" />
     <Compile Include="FacadeLayer\Element.fs" />

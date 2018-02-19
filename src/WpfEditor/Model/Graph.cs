@@ -39,14 +39,18 @@ namespace WpfEditor.Model
             this.model.NewVertexInRepo += (sender, args) => this.CreateNodeWithPos(args.Node);
             this.model.NewEdgeInRepo += (sender, args) => this.CreateEdge(args.Edge, args.PrevVer, args.CtrlVer);
         }
-
-        public event EventHandler DrawGraph;
+        
+        public event EventHandler RelayoutGraph;
+        public event EventHandler ZoomToFeel;
+        public event EventHandler AddVertexConnectionPoints;
 
         public event EventHandler<ElementAddedEventArgs> ElementAdded;
 
         public event EventHandler<DataVertexArgs> AddNewVertexControl;
         public event EventHandler<DataEdgeArgs> AddNewEdgeControl;
 
+        public event EventHandler<DataEdgeArgs> AddNewEdgeControlWithoutVCP;
+        public event EventHandler<DataVertexArgs> AddNewVertexControlWithoutPos;
         public BidirectionalGraph<NodeViewModel, EdgeViewModel> DataGraph { get; }
 
         // Should be replaced
@@ -90,10 +94,28 @@ namespace WpfEditor.Model
                     EdgeType = EdgeViewModel.EdgeTypeEnum.Association
                 };
                 this.DataGraph.AddEdge(newEdge);
+
+                var args = new DataEdgeArgs
+                {
+                    EdgeViewModel = newEdge
+                };
+                this.AddNewEdgeControlWithoutVCP?.Invoke(this, args);
+
                 this.ElementAdded?.Invoke(this, new ElementAddedEventArgs {Element = edge});
             }
+            this.RelayoutGraph?.Invoke(this, EventArgs.Empty);
+            this.ZoomToFeel?.Invoke(this, EventArgs.Empty);
+            this.AddVertexConnectionPoints?.Invoke(this, EventArgs.Empty);
+        }
 
-            this.DrawGraph?.Invoke(this, EventArgs.Empty);
+        public void SetTargetVCPId(EdgeViewModel edgeViewModel, int id)
+        {
+            edgeViewModel.TargetConnectionPointId = id;
+        }
+
+        public void SetSourceVCPId(EdgeViewModel edgeViewModel, int id)
+        {
+            edgeViewModel.SourceConnectionPointId = id;
         }
 
         public void CreateEdge(IEdge edge, NodeViewModel prevVer, NodeViewModel ctrlVer)
@@ -104,6 +126,7 @@ namespace WpfEditor.Model
             }
 
             var newEdge = new EdgeViewModel(prevVer, ctrlVer, Convert.ToDouble(true));
+
             var args = new DataEdgeArgs
             {
                 EdgeViewModel = newEdge
@@ -128,7 +151,7 @@ namespace WpfEditor.Model
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             var args = new DataVertexArgs
             {
-                DataVert = vertex
+                NodeViewModel = vertex
             };
             this.AddNewVertexControl?.Invoke(this, args);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
@@ -150,11 +173,17 @@ namespace WpfEditor.Model
             attributeInfos.ToList().ForEach(x => vertex.Attributes.Add(x));
             this.DataGraph.AddVertex(vertex);
             this.ElementAdded?.Invoke(this, new ElementAddedEventArgs { Element = node });
+
+            var args = new DataVertexArgs
+            {
+                NodeViewModel = vertex
+            };
+            this.AddNewVertexControlWithoutPos?.Invoke(this, args);
         }
 
         public class DataVertexArgs : EventArgs
         {
-            public NodeViewModel DataVert { get; set; }
+            public NodeViewModel NodeViewModel { get; set; }
         }
 
         public class DataEdgeArgs : EventArgs
